@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "poppins",sans-serif;
+        }
+        body{
+            height: 97vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #333;
+        }
+        .container{
+            width: 500px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+        .container h1{
+            text-align: center;
+            font-weight: 520;
+            margin-bottom: 1.5rem;
+        }
+        .container textarea{
+            padding: 0.3rem;
+            width: 100%;
+            border:none;
+            margin-bottom: 0.7rem;
+        }
+        .container textarea:focus{
+            outline-color: rgb(0, 136, 255);
+        }
+        button{
+            padding: 0.4rem 0.5rem;
+            background-color:rgb(0, 136, 255) ;
+            border: 0;
+            color: white;
+            box-shadow: 0 8px 9px rgba(0,0,0,0.2);
+            margin-bottom: 1.7rem;
+            cursor: pointer;
+        }
+        
+        .footernote h3{
+            font-weight: 550;
+            margin-bottom: 1.6rem;
+            text-align: center;
+
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>My Notes App</h1>
+            <div class="notesbody">
+                <h5>Add a note</h5>
+                <textarea name="" cols="30" rows="3" id="textnote" title="k"></textarea><br>
+                <button id="btnnote">Add Note</button>
+            </div>
+            <div class="footernote">
+                <h3>Your Notes</h3>
+                <div id="note">
+
+                </div>
+            </div>
+        </div>
+        <!-- javascript -->
+        <script>
+
+        // If user adds a note , save it to th local storage
+          let btnnote = document.getElementById("btnnote");
+          btnnote.addEventListener("click",function(){
+            let textnotes= document.getElementById("textnote");
+            let notes =localStorage.getItem("notes");
+            // check if notes is empty and if not then parse the data in notesObj
+            if(notes == null){
+                notesObj = [];
+            }
+            else{
+                notesObj = JSON.parse(notes);
+            }
+            // push notes into notesObj
+            notesObj.push(textnotes.value);
+            // store notes 
+            localStorage.setItem("notes" , JSON.stringify(notesObj));
+            textnotes.value ="";
+            
+            showNotes();
+          });
+
+        // function for showing notes from local storage
+        function showNotes(){
+           
+            let notes = localStorage.getItem("notes");
+            if(notes == null){
+                notesObj = [];
+            }
+            else{
+                notesObj = JSON.parse(notes);
+            }
+            let html ="";
+            notesObj.forEach(function(element,index){
+
+                html += `
+                
+                   <div class="cardbody" style="display:inline-block; margin-right:3rem;">
+                        <h4>Note ${index + 1}</h4>
+                        <p style="margin-top:0.3rem">${element}</p>
+                        <button id="${index}" onclick="deleteNotes(this.id)" class="btn" style="background-color:red;
+                            margin-top:0.3rem;">Delete
+                            Note</button>
+                    </div>
+                    `;
+                });
+                let noteselm =document.getElementById('note');
+                if(notesObj.length != 0){
+                    noteselm.innerHTML = html;
+                }
+                 else{
+                    noteselm.innerHTML = "Nothing to show here! Create your first note";
+                 }   
+
+                
+            }
+        
+        showNotes();
+        
+
+        //function for deleting notes
+       function deleteNotes(index){
+        let notes = localStorage.getItem("notes");
+        if(notes == null){
+            notesObj = [];
+        }
+        else{
+            notesObj = JSON.parse(notes);
+        }
+        // use splice method to remove notes
+        notesObj.splice(index,1);
+        localStorage.setItem("notes", JSON.stringify(notesObj));
+
+        showNotes();
+       }
+        </script>
+    </body>
+</html>
